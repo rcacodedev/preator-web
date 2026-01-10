@@ -35,7 +35,7 @@ export function Header() {
           <a href="https://app.preator.es" className="btn btn-ghost">
             Entrar
           </a>
-          <Link href="/alta" className="btn btn-primary">
+          <Link href="/alta" className="btn btn-accent">
             Empezar
           </Link>
         </div>

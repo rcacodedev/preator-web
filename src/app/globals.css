@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 /* ======================
-   Monochrome theme (PRO)
+   PREATOR Web PRO Theme
+   Black / White + Red
    ====================== */
 
 :root {
@@ -11,6 +12,10 @@
   --border: rgba(10, 10, 10, 0.14);
   --panel: rgba(10, 10, 10, 0.03);
   --panel2: rgba(10, 10, 10, 0.06);
+
+  --accent: #ef4444; /* rojo */
+  --accent2: #b91c1c; /* rojo oscuro */
+  --accentSoft: rgba(239, 68, 68, 0.14);
 
   --btn-bg: #0a0a0a;
   --btn-fg: #ffffff;
@@ -27,6 +32,10 @@ html[data-theme="dark"] {
   --border: rgba(255, 255, 255, 0.14);
   --panel: rgba(255, 255, 255, 0.06);
   --panel2: rgba(255, 255, 255, 0.1);
+
+  --accent: #ef4444;
+  --accent2: #fecaca;
+  --accentSoft: rgba(239, 68, 68, 0.18);
 
   --btn-bg: #ffffff;
   --btn-fg: #0a0a0a;
@@ -74,6 +83,10 @@ a {
   padding: 1rem;
 }
 
+.hr {
+  border-top: 1px solid var(--border);
+}
+
 .input,
 .select,
 .textarea {
@@ -83,6 +96,14 @@ a {
   color: var(--fg);
   border-radius: 0.85rem;
   padding: 0.55rem 0.8rem;
+  outline: none;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accentSoft);
 }
 
 .textarea {
@@ -93,12 +114,16 @@ a {
   border: 1px solid var(--border);
   border-radius: 0.85rem;
   padding: 0.55rem 0.9rem;
-  font-size: 0.9rem;
-  transition: opacity 0.15s ease, background 0.15s ease;
+  font-size: 0.92rem;
+  transition: transform 0.08s ease, opacity 0.15s ease, background 0.15s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+}
+
+.btn:active {
+  transform: translateY(1px);
 }
 
 .btn-primary {
@@ -117,6 +142,22 @@ a {
   background: var(--ghost2);
 }
 
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
+}
+.btn-accent:hover {
+  opacity: 0.92;
+}
+
+.link-accent {
+  color: var(--accent);
+}
+.link-accent:hover {
+  color: var(--accent2);
+}
+
 .pill {
   border: 1px solid var(--border);
   background: var(--ghost);
@@ -132,4 +173,13 @@ a {
   background: var(--btn-bg);
   color: var(--btn-fg);
   border-color: transparent;
+}
+
+.badge-accent {
+  border: 1px solid var(--accent);
+  background: var(--accentSoft);
+  color: var(--fg);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.78rem;
 }

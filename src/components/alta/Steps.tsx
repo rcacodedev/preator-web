@@ -13,7 +13,7 @@ const steps = [
 export function AltaSteps() {
   const pathname = usePathname();
   return (
-    <div className="rounded-2xl border p-4">
+    <div className="card">
       <div className="flex flex-wrap gap-2 text-sm">
         {steps.map((s, idx) => {
           const active = pathname?.startsWith(s.href);
@@ -23,7 +23,7 @@ export function AltaSteps() {
               href={s.href}
               className={[
                 "rounded-full px-3 py-1",
-                active ? "bg-black text-white" : "bg-black/5 hover:bg-black/10",
+                active ? "pill pill-active" : "pill",
               ].join(" ")}
             >
               {idx + 1}. {s.label}

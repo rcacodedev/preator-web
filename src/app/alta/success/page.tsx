@@ -16,15 +16,15 @@ export default function AltaSuccessPage() {
   }, [reset]);
 
   return (
-    <div className="rounded-2xl border p-8 space-y-3">
+    <div className="card space-y-3">
       <h1 className="text-2xl font-bold">¡Pago completado!</h1>
-      <p className="text-black/70">
+      <p className="muted">
         Tu suscripción está en marcha. Si tarda unos segundos en reflejarse, es
         normal: depende del webhook de Stripe.
       </p>
 
       {sessionId ? (
-        <p className="text-xs text-black/50">
+        <p className="text-xs muted">
           session_id: <span className="font-mono">{sessionId}</span>
         </p>
       ) : null}
@@ -36,7 +36,7 @@ export default function AltaSuccessPage() {
         >
           Entrar en la app
         </a>
-        <Link href="/contacto" className="rounded-lg border px-4 py-2">
+        <Link href="/contacto" className="card py-2">
           Contactar soporte
         </Link>
       </div>

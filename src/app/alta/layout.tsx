@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AltaProvider } from "./AltaProvider";
 import { AltaSteps } from "@/components/alta/Steps";
+import { ThemeToggle } from "@/components/site/ThemeToggle";
 
 export default function AltaLayout({
   children,
@@ -9,22 +10,28 @@ export default function AltaLayout({
 }) {
   return (
     <AltaProvider>
-      <div className="min-h-screen bg-white">
-        <header className="border-b">
-          <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-4">
-            <Link href="/" className="font-bold">
+      <div className="min-h-screen">
+        <header
+          className="border-b"
+          style={{ borderColor: "var(--border)", background: "var(--bg)" }}
+        >
+          <div className="container flex items-center justify-between py-4">
+            <Link href="/" className="font-bold tracking-tight">
               PREATOR
             </Link>
-            <a
-              href="https://app.preator.es"
-              className="text-sm text-black/70 hover:underline"
-            >
-              Ya tengo cuenta
-            </a>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <a
+                href="https://app.preator.es"
+                className="btn btn-ghost text-sm"
+              >
+                Ya tengo cuenta
+              </a>
+            </div>
           </div>
         </header>
 
-        <main className="mx-auto max-w-3xl space-y-6 px-4 py-10">
+        <main className="container max-w-3xl space-y-6 py-10">
           <AltaSteps />
           {children}
         </main>

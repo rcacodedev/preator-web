@@ -3,11 +3,11 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <div className="space-y-12">
-      <section className="rounded-2xl border p-8">
+      <section className="card">
         <h1 className="text-3xl font-bold tracking-tight">
           Gestiona tu empresa sin pelearte con Excel.
         </h1>
-        <p className="mt-3 max-w-2xl text-black/70">
+        <p className="mt-3 max-w-2xl muted">
           Ventas, compras, inventario, facturación y KPIs en una sola app.
           Multi-empresa, roles y auditoría.
         </p>
@@ -37,9 +37,9 @@ export default function HomePage() {
           },
           { t: "KPIs PRO", d: "Ingresos, márgenes, pendientes, IVA básico." },
         ].map((c) => (
-          <div key={c.t} className="rounded-2xl border p-6">
+          <div key={c.t} className="card">
             <h3 className="font-semibold">{c.t}</h3>
-            <p className="mt-2 text-sm text-black/70">{c.d}</p>
+            <p className="mt-2 text-sm muted">{c.d}</p>
           </div>
         ))}
       </section>
