@@ -23,6 +23,9 @@
   --ghost2: rgba(10, 10, 10, 0.1);
 
   --input-bg: rgba(10, 10, 10, 0.03);
+
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
+  --shadow2: 0 16px 40px rgba(0, 0, 0, 0.12);
 }
 
 html[data-theme="dark"] {
@@ -43,6 +46,9 @@ html[data-theme="dark"] {
   --ghost2: rgba(255, 255, 255, 0.14);
 
   --input-bg: rgba(255, 255, 255, 0.08);
+
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  --shadow2: 0 16px 46px rgba(0, 0, 0, 0.55);
 }
 
 html,
@@ -55,14 +61,50 @@ body {
   color: var(--fg);
 }
 
+/* Subtle premium backdrop */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(
+      700px circle at 15% -10%,
+      var(--accentSoft) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      520px circle at 90% 0%,
+      rgba(10, 10, 10, 0.04) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      520px circle at 50% 110%,
+      rgba(10, 10, 10, 0.03) 0%,
+      transparent 55%
+    );
+  opacity: 0.9;
+}
+
 a {
   color: inherit;
 }
 
-.container {
-  max-width: 72rem; /* ~ max-w-6xl */
+/* Avoid overriding Tailwind's built-in `.container` utility */
+.site-container {
+  width: 100%;
   margin: 0 auto;
   padding: 0 1rem;
+}
+@media (min-width: 640px) {
+  .site-container {
+    padding: 0 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .site-container {
+    padding: 0 2rem;
+  }
 }
 
 .muted {
@@ -74,6 +116,7 @@ a {
   background: var(--panel);
   border-radius: 1rem;
   padding: 1.5rem;
+  box-shadow: var(--shadow);
 }
 
 .card-compact {
@@ -81,6 +124,35 @@ a {
   background: var(--panel);
   border-radius: 1rem;
   padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.label {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.help {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.alert {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 0.85rem 1rem;
+  background: var(--panel2);
+  box-shadow: var(--shadow);
+}
+
+.alert-error {
+  border-color: var(--accent);
+  background: var(--accentSoft);
+}
+
+.alert-success {
+  border-color: rgba(16, 185, 129, 0.55);
+  background: rgba(16, 185, 129, 0.12);
 }
 
 .hr {
@@ -124,6 +196,13 @@ a {
 
 .btn:active {
   transform: translateY(1px);
+}
+
+.btn[disabled],
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
 }
 
 .btn-primary {
@@ -206,6 +285,6 @@ a {
 }
 .hover-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow2);
   border-color: var(--accent);
 }

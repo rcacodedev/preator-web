@@ -15,23 +15,31 @@ export default function AltaLayout({
           className="border-b"
           style={{ borderColor: "var(--border)", background: "var(--bg)" }}
         >
-          <div className="container flex items-center justify-between py-4">
+          <div className="site-container mx-auto max-w-6xl flex items-center justify-between py-4">
             <Link href="/" className="font-bold tracking-tight">
               PREATOR
             </Link>
+
             <div className="flex items-center gap-2">
               <ThemeToggle />
               <a
                 href="https://app.preator.es"
-                className="btn btn-ghost text-sm"
+                className="btn btn-ghost text-sm hidden sm:inline-flex"
               >
                 Ya tengo cuenta
+              </a>
+              <a
+                href="https://app.preator.es"
+                className="btn btn-ghost text-sm sm:hidden"
+                aria-label="Entrar"
+              >
+                Entrar
               </a>
             </div>
           </div>
         </header>
 
-        <main className="container max-w-3xl space-y-6 py-10">
+        <main className="site-container mx-auto max-w-3xl space-y-6 py-10 pb-24">
           <AltaSteps />
           {children}
         </main>

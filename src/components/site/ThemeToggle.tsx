@@ -2,32 +2,38 @@
 
 import { useEffect, useState } from "react";
 
+type Theme = "dark" | "light";
+
+function readThemeFromDomOrStorage(): Theme {
+  if (typeof window === "undefined") return "dark";
+  const attr = document.documentElement.getAttribute("data-theme");
+  if (attr === "light" || attr === "dark") return attr;
+  const stored = window.localStorage.getItem("theme");
+  if (stored === "light" || stored === "dark") return stored;
+  return "dark";
+}
+
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<Theme>(() => readThemeFromDomOrStorage());
 
+  // Sync to external systems (DOM + localStorage). No setState here.
   useEffect(() => {
-    const current =
-      (document.documentElement.getAttribute("data-theme") as any) || "dark";
-    setTheme(current);
-  }, []);
-
-  function toggle() {
-    const next = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    document.documentElement.setAttribute("data-theme", next);
+    document.documentElement.setAttribute("data-theme", theme);
     try {
-      localStorage.setItem("preator_theme", next);
-    } catch {}
-  }
+      window.localStorage.setItem("theme", theme);
+    } catch {
+      // ignore
+    }
+  }, [theme]);
 
   return (
     <button
       type="button"
       className="btn btn-ghost"
-      onClick={toggle}
       aria-label="Cambiar tema"
+      onClick={() => setTheme((t) => (t === "dark" ? "light" : "dark"))}
     >
-      {theme === "dark" ? "☾" : "☀"}
+      {theme === "dark" ? "Dark" : "Light"}
     </button>
   );
 }

@@ -3,6 +3,16 @@
 import { useState } from "react";
 import { sendContact } from "@/lib/preatorApi";
 
+function getErrorMessage(ex: unknown): string {
+  if (ex instanceof Error) return ex.message;
+  if (typeof ex === "string") return ex;
+  try {
+    return JSON.stringify(ex);
+  } catch {
+    return "Error desconocido";
+  }
+}
+
 export function ContactForm() {
   const [ok, setOk] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -27,9 +37,9 @@ export function ContactForm() {
     try {
       await sendContact(payload);
       setOk("Mensaje enviado. Te responderemos pronto.");
-      (e.target as HTMLFormElement).reset();
-    } catch (ex: any) {
-      setErr(ex?.message || "No se pudo enviar el mensaje.");
+      e.currentTarget.reset();
+    } catch (ex: unknown) {
+      setErr(getErrorMessage(ex) || "No se pudo enviar el mensaje.");
     } finally {
       setLoading(false);
     }
@@ -43,29 +53,41 @@ export function ContactForm() {
         tabIndex={-1}
         autoComplete="off"
       />
+
       <div className="grid gap-2">
-        <label className="text-sm">Nombre</label>
+        <label className="label">Nombre</label>
         <input name="name" required className="input" />
       </div>
+
       <div className="grid gap-2">
-        <label className="text-sm">Email</label>
+        <label className="label">Email</label>
         <input name="email" type="email" required className="input" />
       </div>
+
       <div className="grid gap-2">
-        <label className="text-sm">Empresa (opcional)</label>
+        <label className="label">Empresa (opcional)</label>
         <input name="company" className="input" />
       </div>
+
       <div className="grid gap-2">
-        <label className="text-sm">Teléfono (opcional)</label>
+        <label className="label">Teléfono (opcional)</label>
         <input name="phone" className="input" />
       </div>
+
       <div className="grid gap-2">
-        <label className="text-sm">Mensaje</label>
+        <label className="label">Mensaje</label>
         <textarea name="message" required rows={5} className="textarea" />
       </div>
 
-      {ok ? <p className="text-sm text-green-700">{ok}</p> : null}
-      {err ? <p className="text-sm text-red-700">{err}</p> : null}
+      {ok ? <div className="alert alert-success text-sm">{ok}</div> : null}
+      {err ? (
+        <div
+          className="alert alert-error text-sm"
+          style={{ whiteSpace: "pre-line" }}
+        >
+          <b>Error:</b> {err}
+        </div>
+      ) : null}
 
       <button disabled={loading} className="btn btn-accent">
         {loading ? "Enviando..." : "Enviar"}

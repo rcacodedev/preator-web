@@ -9,7 +9,9 @@ export default function SiteLayout({
   return (
     <>
       <Header />
-      <main className="container py-8 md:py-10 lg:py-12">{children}</main>
+      <main className="site-container mx-auto max-w-6xl py-8 md:py-10 lg:py-12">
+        {children}
+      </main>
       <Footer />
     </>
   );

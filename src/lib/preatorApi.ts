@@ -2,16 +2,81 @@ const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "") ||
   "http://localhost:8000";
 
+function asRecord(v: unknown): Record<string, unknown> | null {
+  if (typeof v !== "object" || v === null) return null;
+  return v as Record<string, unknown>;
+}
+
+function normalizeHeaders(h?: HeadersInit): Record<string, string> {
+  const out: Record<string, string> = {};
+  if (!h) return out;
+
+  // Headers instance
+  if (typeof Headers !== "undefined" && h instanceof Headers) {
+    h.forEach((value, key) => {
+      out[key] = value;
+    });
+    return out;
+  }
+
+  // Array of tuples
+  if (Array.isArray(h)) {
+    for (const pair of h) {
+      const [k, v] = pair;
+      out[String(k)] = String(v);
+    }
+    return out;
+  }
+
+  // Plain object
+  if (typeof h === "object") {
+    for (const [k, v] of Object.entries(h as Record<string, string>)) {
+      out[k] = String(v);
+    }
+  }
+
+  return out;
+}
+
+function formatApiError(data: unknown, status: number): string {
+  if (!data) return `HTTP ${status}`;
+  if (typeof data === "string") return data;
+
+  const obj = asRecord(data);
+  if (obj) {
+    const direct = obj.detail ?? obj.error ?? obj.message;
+    if (typeof direct === "string" && direct.trim()) return direct;
+
+    const lines: string[] = [];
+    for (const [k, v] of Object.entries(obj)) {
+      if (v == null) continue;
+      if (Array.isArray(v)) {
+        lines.push(`${k}: ${v.map(String).join(" ")}`);
+      } else if (typeof v === "string") {
+        lines.push(`${k}: ${v}`);
+      } else {
+        try {
+          lines.push(`${k}: ${JSON.stringify(v)}`);
+        } catch {
+          lines.push(`${k}: error`);
+        }
+      }
+    }
+    if (lines.length) return lines.join("\n");
+  }
+
+  return `HTTP ${status}`;
+}
+
 async function apiJson<T>(path: string, init?: RequestInit): Promise<T> {
   const method = (init?.method || "GET").toUpperCase();
   const hasBody = init?.body !== undefined && init?.body !== null;
 
   const headers: Record<string, string> = {
-    ...(init?.headers || {}),
+    ...normalizeHeaders(init?.headers),
   };
 
-  // Solo setear Content-Type cuando mandas body
-  if (hasBody && method !== "GET" && !headers["Content-Type"]) {
+  if (hasBody && method !== "GET" && !("Content-Type" in headers)) {
     headers["Content-Type"] = "application/json";
   }
 
@@ -20,14 +85,10 @@ async function apiJson<T>(path: string, init?: RequestInit): Promise<T> {
     headers,
   });
 
-  const data = await res.json().catch(() => ({}));
+  const data: unknown = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    const msg =
-      data && (data.detail || data.error)
-        ? data.detail || data.error
-        : `HTTP ${res.status}`;
-    throw new Error(msg);
+    throw new Error(formatApiError(data, res.status));
   }
   return data as T;
 }

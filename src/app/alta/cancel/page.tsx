@@ -1,26 +1,32 @@
-"use client";
-
 import Link from "next/link";
 
 export default function AltaCancelPage() {
   return (
-    <div className="rounded-2xl border p-8 space-y-3">
+    <div className="card space-y-4 motion-in">
       <h1 className="text-2xl font-bold">Pago cancelado</h1>
-      <p className="text-black/70">
-        No pasa nada. Puedes volver a intentarlo cuando quieras.
+      <p className="muted">
+        No pasa nada. Puedes volver a intentarlo cuando quieras. Si te dio
+        error, escríbenos y lo miramos.
       </p>
 
-      <div className="flex flex-wrap gap-3 pt-2">
-        <Link
-          href="/alta/plan"
-          className="rounded-lg bg-black px-4 py-2 text-white"
-        >
-          Volver al plan
+      <div className="flex flex-wrap gap-2">
+        <Link href="/alta/plan" className="btn btn-accent">
+          Reintentar
         </Link>
-        <Link href="/contacto" className="rounded-lg border px-4 py-2">
+        <Link href="/contacto" className="btn btn-ghost">
           Contactar soporte
         </Link>
+        <Link href="/" className="btn btn-primary">
+          Volver al inicio
+        </Link>
       </div>
+
+      <p className="muted text-xs">
+        Soporte:{" "}
+        <a className="link-accent" href="mailto:soporte@preator.es">
+          soporte@preator.es
+        </a>
+      </p>
     </div>
   );
 }

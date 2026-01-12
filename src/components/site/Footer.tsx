@@ -5,7 +5,7 @@ export function Footer() {
 
   return (
     <footer className="border-t" style={{ borderColor: "var(--border)" }}>
-      <div className="container py-10">
+      <div className="site-container mx-auto max-w-6xl py-10">
         <div className="grid gap-8 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <Link href="/" className="text-lg font-bold tracking-tight">

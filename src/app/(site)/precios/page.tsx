@@ -45,7 +45,7 @@ export default function PreciosPage() {
   ];
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 mt-2 mb-2">
       <section className="card">
         <span className="badge-accent">Precios</span>
         <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
@@ -149,19 +149,6 @@ export default function PreciosPage() {
             </p>
           </div>
         ))}
-      </section>
-
-      <section className="card-compact">
-        <h3 className="font-semibold">Enterprise</h3>
-        <p className="mt-2 text-sm muted max-w-3xl">
-          Si necesitas requisitos especiales (multi-sede, onboarding guiado,
-          integraciones a medida), hablamos y te preparamos un plan.
-        </p>
-        <div className="mt-4">
-          <Link href="/contacto" className="btn btn-accent">
-            Contactar
-          </Link>
-        </div>
       </section>
     </div>
   );
