@@ -5,10 +5,10 @@ export default function PreciosPage() {
     {
       name: "Starter",
       priceM: "29€",
-      priceY: "319€",
+      priceY: "296€",
       desc: "Para autónomos que quieren control y claridad.",
       bullets: [
-        "2 usuarios",
+        "1 usuario",
         "1–2 almacenes",
         "Ventas + Compras + Inventario",
         "KPIs básicos",
@@ -18,13 +18,13 @@ export default function PreciosPage() {
     {
       name: "Pro",
       priceM: "59€",
-      priceY: "649€",
+      priceY: "602€",
       desc: "Para equipos pequeños que necesitan ir más rápido.",
       bullets: [
         "10 usuarios",
         "3–5 almacenes",
         "KPIs PRO + export",
-        "Más control y permisos",
+        "Usuarios y permisos",
       ],
       cta: "Elegir Pro",
       highlight: true,
@@ -32,7 +32,7 @@ export default function PreciosPage() {
     {
       name: "Business",
       priceM: "99€",
-      priceY: "1089€",
+      priceY: "1010€",
       desc: "Para empresas con operativa y varios almacenes.",
       bullets: [
         "25 usuarios",
@@ -48,24 +48,41 @@ export default function PreciosPage() {
     <div className="space-y-10">
       <section className="card">
         <span className="badge-accent">Precios</span>
-        <h1 className="mt-3 text-3xl font-bold tracking-tight">
+        <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
           Planes simples. Sin letra pequeña rara.
         </h1>
         <p className="mt-3 muted max-w-2xl">
-          Mensual o anual (con 1 mes gratis). IVA no incluido. Si tienes dudas,
-          te ayudamos a elegir plan.
+          Precios sin IVA. El IVA se calcula en el checkout según tu dirección
+          fiscal. El plan anual aplica un <b>15%</b> de descuento.
         </p>
-        <div className="mt-6 flex flex-wrap gap-3">
+
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Link href="/alta" className="btn btn-accent">
             Empezar
           </Link>
-          <Link href="/contacto" className="btn btn-ghost">
+          <Link href="/ayuda#usuarios-y-permisos" className="btn btn-ghost">
+            Usuarios y permisos
+          </Link>
+          <Link href="/contacto" className="btn btn-primary">
             Hablar con soporte
           </Link>
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="card-compact" id="usuarios-y-permisos">
+        <h2 className="text-lg font-bold">Usuarios y permisos</h2>
+        <p className="mt-2 text-sm muted max-w-3xl">
+          Un “usuario” es una persona con su propio email y contraseña dentro de
+          tu empresa en PREATOR. Puedes invitar a tu equipo (según plan),
+          asignar roles y desactivar accesos sin perder histórico.
+        </p>
+        <p className="mt-2 text-sm muted">
+          Starter incluye <b>1 usuario</b>. Pro incluye hasta <b>10</b> y
+          Business hasta <b>25</b>.
+        </p>
+      </section>
+
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {plans.map((p) => (
           <div
             key={p.name}
@@ -91,7 +108,7 @@ export default function PreciosPage() {
                 <div className="muted">/mes</div>
               </div>
               <div className="mt-1 muted">
-                Anual: <b>{p.priceY}</b> (1 mes gratis)
+                Anual: <b>{p.priceY}</b> <span className="muted">(−15%)</span>
               </div>
             </div>
 
@@ -117,11 +134,24 @@ export default function PreciosPage() {
             </div>
 
             <p className="mt-3 text-xs muted">
-              Nota: PREATOR no sustituye a tu asesoría. Para decisiones
-              fiscales, consulta a tu gestor.
+              PREATOR te ayuda a gestionar. Para decisiones fiscales, consulta a
+              tu gestor.
             </p>
           </div>
         ))}
+      </section>
+
+      <section className="card-compact">
+        <h3 className="font-semibold">Enterprise</h3>
+        <p className="mt-2 text-sm muted max-w-3xl">
+          Si necesitas requisitos especiales (multi-sede, onboarding guiado,
+          integraciones a medida), hablamos y te preparamos un plan.
+        </p>
+        <div className="mt-4">
+          <Link href="/contacto" className="btn btn-accent">
+            Contactar
+          </Link>
+        </div>
       </section>
     </div>
   );
