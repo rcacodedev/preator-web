@@ -19,7 +19,7 @@ export default function PreciosPage() {
       name: "Pro",
       priceM: "59€",
       priceY: "602€",
-      desc: "Para equipos pequeños que necesitan ir más rápido.",
+      desc: "Para pequeñas empresas, que necesitan gestionar diferentes departamentos.",
       bullets: [
         "10 usuarios",
         "3–5 almacenes",
@@ -33,7 +33,7 @@ export default function PreciosPage() {
       name: "Business",
       priceM: "99€",
       priceY: "1010€",
-      desc: "Para empresas con operativa y varios almacenes.",
+      desc: "Para empresas con una alta operatividad.",
       bullets: [
         "25 usuarios",
         "10 almacenes",
@@ -51,10 +51,17 @@ export default function PreciosPage() {
         <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
           Planes simples. Sin letra pequeña rara.
         </h1>
-        <p className="mt-3 muted max-w-2xl">
-          Precios sin IVA. El IVA se calcula en el checkout según tu dirección
-          fiscal. El plan anual aplica un <b>15%</b> de descuento.
-        </p>
+        <div className="card-compact">
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <p className="text-sm muted">
+              <b>Precios sin IVA.</b> El IVA se calcula en el checkout según tu
+              dirección fiscal.
+            </p>
+            <p className="text-sm muted">
+              Plan anual: <b>−15%</b> vs mensual × 12.
+            </p>
+          </div>
+        </div>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Link href="/alta" className="btn btn-accent">
@@ -106,6 +113,9 @@ export default function PreciosPage() {
               <div className="flex items-end gap-2">
                 <div className="text-3xl font-extrabold">{p.priceM}</div>
                 <div className="muted">/mes</div>
+                <p className="mt-2 text-xs muted">
+                  + IVA (calculado en checkout)
+                </p>
               </div>
               <div className="mt-1 muted">
                 Anual: <b>{p.priceY}</b> <span className="muted">(−15%)</span>

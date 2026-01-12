@@ -3,28 +3,23 @@ import Link from "next/link";
 export default function TourPage() {
   const blocks = [
     {
+      t: "Contactos",
+      d: "Clientes, proveedores y empleados con todo su contexto.",
+    },
+    { t: "Inventario", d: "Productos, almacenes y movimientos de stock." },
+    {
       t: "Ventas y facturación",
       d: "Presupuesto → pedido → albarán → factura. PDFs listos para enviar.",
     },
-    {
-      t: "Compras y proveedores",
-      d: "Pedidos, facturas de proveedor y pagos. Todo trazado.",
-    },
-    {
-      t: "Inventario",
-      d: "Productos, almacenes y movimientos de stock. Control real, sin suposiciones.",
-    },
+    { t: "Compras", d: "Pedidos a proveedor, facturas y pagos. Todo trazado." },
+    { t: "KPIs", d: "Ingresos, pendientes, top clientes y exportación." },
     {
       t: "Usuarios y permisos",
-      d: "Invita a tu equipo por email, asigna roles y desactiva accesos sin perder histórico.",
-    },
-    {
-      t: "KPIs PRO",
-      d: "Ingresos, top clientes, pendientes e IVA básico con export.",
+      d: "Invita a tu equipo, asigna roles y desactiva accesos sin perder histórico.",
     },
     {
       t: "Seguridad y auditoría",
-      d: "Roles, acciones registradas y recordatorios claros: para fiscalidad, consulta a tu gestor.",
+      d: "Roles, acciones registradas y recordatorio: consulta a tu gestor en fiscalidad.",
     },
   ];
 
@@ -53,12 +48,34 @@ export default function TourPage() {
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {blocks.map((b) => (
-          <div key={b.t} className="card-compact">
-            <h3 className="font-semibold">{b.t}</h3>
-            <p className="mt-2 text-sm muted">{b.d}</p>
-          </div>
-        ))}
+        {blocks.map((b) => {
+          const highlight = b.t === "Usuarios y permisos";
+          return (
+            <div
+              key={b.t}
+              className={
+                highlight ? "card hover-lift" : "card-compact hover-lift"
+              }
+              style={
+                highlight
+                  ? {
+                      borderColor: "var(--accent)",
+                      background: "var(--panel2)",
+                    }
+                  : undefined
+              }
+            >
+              <h3 className="font-semibold">{b.t}</h3>
+              <p className="mt-2 text-sm muted">{b.d}</p>
+              {highlight ? (
+                <p className="mt-3 text-xs muted">
+                  Los límites de usuarios dependen del plan y se gestionan desde
+                  el panel de control.
+                </p>
+              ) : null}
+            </div>
+          );
+        })}
       </section>
     </div>
   );
