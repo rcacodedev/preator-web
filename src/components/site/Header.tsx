@@ -2,67 +2,30 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
+import { MobileNav } from "./SiteMobileNav";
 
-const NAV_LINKS = [
+type NavItem = { href: string; label: string };
+
+const NAV: NavItem[] = [
   { href: "/tour", label: "Tour" },
   { href: "/precios", label: "Precios" },
   { href: "/ayuda", label: "Ayuda" },
-  { href: "/seguridad", label: "Seguridad" },
-  { href: "/gestor", label: "Gestor" },
   { href: "/contacto", label: "Contacto" },
 ];
 
-function MenuIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-      aria-hidden="true"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
-      <path d="M4 6h16" />
-      <path d="M4 12h16" />
-      <path d="M4 18h16" />
-    </svg>
-  );
+function cn(...v: Array<string | false | null | undefined>) {
+  return v.filter(Boolean).join(" ");
 }
 
-function CloseIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-      aria-hidden="true"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
-      <path d="M6 6l12 12" />
-      <path d="M18 6L6 18" />
-    </svg>
-  );
-}
-
-export function Header() {
+export function SiteHeader() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
-  // ESC closes
-  useEffect(() => {
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
-    }
-    if (open) window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open]);
+  const items = useMemo(() => NAV, []);
 
-  // lock body scroll
+  // Lock body scroll when open (mobile)
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -72,130 +35,96 @@ export function Header() {
     };
   }, [open]);
 
-  const links = useMemo(() => NAV_LINKS, []);
-
   return (
-    <header
-      className="sticky top-0 z-50 border-b"
-      style={{ borderColor: "var(--border)", background: "var(--bg)" }}
-    >
-      <div className="site-container mx-auto max-w-6xl flex items-center justify-between py-3">
+    <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg)]/85 backdrop-blur">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+        {/* Left */}
         <div className="flex items-center gap-3">
-          {/* Mobile menu: ONLY on <md */}
-          <button
-            type="button"
-            className="btn btn-ghost md:hidden"
-            aria-label="Abrir menú"
-            aria-expanded={open}
-            onClick={() => setOpen(true)}
-          >
-            <MenuIcon />
-          </button>
-
-          <Link
-            href="/"
-            className="font-bold tracking-tight flex items-center gap-2"
-          >
-            <span>PREATOR</span>
-            <span
-              className="inline-block h-2 w-2 rounded-full"
-              style={{ background: "var(--accent)" }}
-              aria-hidden="true"
-            />
+          <Link href="/" className="group inline-flex items-center gap-2">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--border)] bg-[var(--card)] text-sm font-bold">
+              P
+            </span>
+            <span className="text-sm font-semibold tracking-wide">PREATOR</span>
+            <span className="ml-2 hidden rounded-full border border-[var(--border)] bg-[var(--card)] px-2 py-0.5 text-[11px] text-[var(--muted)] md:inline-flex">
+              ERP online
+            </span>
           </Link>
         </div>
 
-        {/* Desktop nav */}
-        <nav className="hidden items-center gap-5 text-sm md:flex">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="muted hover:!text-[var(--fg)]"
-            >
-              {l.label}
-            </Link>
-          ))}
+        {/* Center (desktop nav) */}
+        <nav className="hidden items-center gap-1 md:flex">
+          {items.map((it) => {
+            const active = pathname === it.href;
+            return (
+              <Link
+                key={it.href}
+                href={it.href}
+                className={cn(
+                  "rounded-full px-3 py-2 text-sm transition",
+                  active
+                    ? "bg-[var(--card)] text-[var(--fg)]"
+                    : "text-[var(--muted)] hover:bg-[var(--card)] hover:text-[var(--fg)]"
+                )}
+              >
+                {it.label}
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Desktop actions only (avoid duplicate CTAs with mobile drawer) */}
+        {/* Right */}
         <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <a
-            href="https://app.preator.es"
-            className="btn btn-ghost hidden md:inline-flex"
-          >
-            Entrar
-          </a>
-          <Link href="/alta" className="btn btn-accent hidden md:inline-flex">
-            Empezar
-          </Link>
+          {/* Desktop CTAs */}
+          <div className="hidden items-center gap-2 md:flex">
+            <a
+              href="https://app.preator.es"
+              className="btn btn-ghost"
+              rel="noreferrer"
+            >
+              Acceder
+            </a>
+            <Link href="/alta/cuenta" className="btn btn-accent">
+              Darse de alta
+            </Link>
+            <ThemeToggle />
+          </div>
+
+          {/* Mobile: only burger */}
+          <div className="md:hidden">
+            <button
+              type="button"
+              className="btn btn-ghost"
+              aria-label={open ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={open}
+              onClick={() => setOpen((v) => !v)}
+            >
+              <span className="sr-only">{open ? "Cerrar" : "Abrir"} menú</span>
+              <span className="relative block h-5 w-5">
+                <span
+                  className={cn(
+                    "absolute left-0 top-1 block h-[2px] w-5 rounded bg-[var(--fg)] transition",
+                    open ? "translate-y-2 rotate-45" : ""
+                  )}
+                />
+                <span
+                  className={cn(
+                    "absolute left-0 top-2.5 block h-[2px] w-5 rounded bg-[var(--fg)] transition",
+                    open ? "opacity-0" : "opacity-100"
+                  )}
+                />
+                <span
+                  className={cn(
+                    "absolute left-0 top-4 block h-[2px] w-5 rounded bg-[var(--fg)] transition",
+                    open ? "-translate-y-2 -rotate-45" : ""
+                  )}
+                />
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile drawer */}
-      {open ? (
-        <>
-          <button
-            type="button"
-            className="fixed inset-0 z-50 bg-black/45"
-            aria-label="Cerrar menú"
-            onClick={() => setOpen(false)}
-          />
-          <aside
-            className="fixed right-0 top-0 z-50 h-full w-[86%] max-w-sm border-l p-4 transition-transform duration-200 ease-out"
-            style={{ borderColor: "var(--border)", background: "var(--bg)" }}
-            aria-label="Menú"
-          >
-            <div className="flex items-center justify-between">
-              <span className="font-semibold">Menú</span>
-              <button
-                type="button"
-                className="btn btn-ghost"
-                onClick={() => setOpen(false)}
-              >
-                <CloseIcon />
-                Cerrar
-              </button>
-            </div>
-
-            <div className="mt-4 space-y-2">
-              {links.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className="card-compact block hover-lift"
-                  onClick={() => setOpen(false)}
-                >
-                  <div className="font-medium">{l.label}</div>
-                </Link>
-              ))}
-            </div>
-
-            <div className="mt-4 grid gap-2">
-              <a
-                href="https://app.preator.es"
-                className="btn btn-ghost w-full"
-                onClick={() => setOpen(false)}
-              >
-                Entrar
-              </a>
-              <Link
-                href="/alta"
-                className="btn btn-accent w-full"
-                onClick={() => setOpen(false)}
-              >
-                Empezar
-              </Link>
-            </div>
-
-            <p className="mt-4 text-xs muted">
-              PREATOR es una herramienta de gestión. Para decisiones fiscales,
-              consulta a tu gestor.
-            </p>
-          </aside>
-        </>
-      ) : null}
+      <MobileNav open={open} setOpen={setOpen} items={items} />
     </header>
   );
 }

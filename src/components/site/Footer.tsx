@@ -4,10 +4,10 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t" style={{ borderColor: "var(--border)" }}>
+    <footer className="border-t mt-8" style={{ borderColor: "var(--border)" }}>
       <div className="site-container mx-auto max-w-6xl py-10">
         <div className="grid gap-8 lg:grid-cols-12">
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 mt-2">
             <Link href="/" className="text-lg font-bold tracking-tight">
               PREATOR
             </Link>
@@ -16,15 +16,15 @@ export function Footer() {
               facturación con control y claridad.
             </p>
             <p className="mt-4 text-sm muted">
-              Soporte:{" "}
+              Contacto:{" "}
               <a className="link-accent" href="mailto:soporte@preator.es">
-                soporte@preator.es
+                contacto@preator.es
               </a>
             </p>
           </div>
 
           <div className="lg:col-span-8">
-            <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 mt-2">
               <div>
                 <div className="text-sm font-semibold">Producto</div>
                 <div className="mt-3 grid gap-2 text-sm">
@@ -94,7 +94,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="hr mt-10" />
+        <div className="hr mt-4" />
 
         <div className="mt-6 flex flex-col gap-2 text-xs muted sm:flex-row sm:items-center sm:justify-between">
           <span>© {year} PREATOR. Todos los derechos reservados.</span>

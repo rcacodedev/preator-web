@@ -1,4 +1,4 @@
-import { Header } from "@/components/site/Header";
+import { SiteHeader } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 
 export default function SiteLayout({
@@ -8,7 +8,7 @@ export default function SiteLayout({
 }) {
   return (
     <>
-      <Header />
+      <SiteHeader />
       <main className="site-container mx-auto max-w-6xl py-8 md:py-10 lg:py-12">
         {children}
       </main>

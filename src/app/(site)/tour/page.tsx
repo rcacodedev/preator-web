@@ -1,82 +1,49 @@
-import Link from "next/link";
+import { TourGrid } from "@/components/site/TourGrid";
+
+export const metadata = {
+  title: "Tour | PREATOR",
+  description: "Un recorrido rápido por los módulos clave de PREATOR.",
+};
 
 export default function TourPage() {
-  const blocks = [
-    {
-      t: "Contactos",
-      d: "Clientes, proveedores y empleados con todo su contexto.",
-    },
-    { t: "Inventario", d: "Productos, almacenes y movimientos de stock." },
-    {
-      t: "Ventas y facturación",
-      d: "Presupuesto → pedido → albarán → factura. PDFs listos para enviar.",
-    },
-    { t: "Compras", d: "Pedidos a proveedor, facturas y pagos. Todo trazado." },
-    { t: "KPIs", d: "Ingresos, pendientes, top clientes y exportación." },
-    {
-      t: "Usuarios y permisos",
-      d: "Invita a tu equipo, asigna roles y desactiva accesos sin perder histórico.",
-    },
-    {
-      t: "Seguridad y auditoría",
-      d: "Roles, acciones registradas y recordatorio: consulta a tu gestor en fiscalidad.",
-    },
-  ];
-
   return (
-    <div className="space-y-10">
-      <section className="card">
-        <span className="badge-accent">Tour</span>
-        <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-          Una app seria para gestionar tu negocio.
-        </h1>
-        <p className="mt-3 muted max-w-2xl">
-          PREATOR une ventas, compras, inventario y analítica con una interfaz
-          clara y rápida. Menos fricción, más orden.
+    <div className="space-y-10 motion-in">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold">Tour</h1>
+        <p className="muted max-w-2xl">
+          PREATOR es una herramienta online para gestionar tu empresa con
+          claridad: contactos, inventario, ventas, compras y KPIs. Todo con un
+          diseño limpio y orientado a trabajar rápido.
         </p>
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <Link href="/alta" className="btn btn-accent">
-            Empezar ahora
-          </Link>
-          <Link href="/precios" className="btn btn-ghost">
-            Ver precios
-          </Link>
-          <Link href="/ayuda#usuarios-y-permisos" className="btn btn-primary">
-            Usuarios y permisos
-          </Link>
-        </div>
-      </section>
+      </div>
 
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {blocks.map((b) => {
-          const highlight = b.t === "Usuarios y permisos";
-          return (
-            <div
-              key={b.t}
-              className={
-                highlight ? "card hover-lift" : "card-compact hover-lift"
-              }
-              style={
-                highlight
-                  ? {
-                      borderColor: "var(--accent)",
-                      background: "var(--panel2)",
-                    }
-                  : undefined
-              }
-            >
-              <h3 className="font-semibold">{b.t}</h3>
-              <p className="mt-2 text-sm muted">{b.d}</p>
-              {highlight ? (
-                <p className="mt-3 text-xs muted">
-                  Los límites de usuarios dependen del plan y se gestionan desde
-                  el panel de control.
-                </p>
-              ) : null}
-            </div>
-          );
-        })}
-      </section>
+      <TourGrid />
+
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="card-compact">
+          <p className="text-sm font-semibold">Usuarios y permisos</p>
+          <p className="muted text-sm">
+            Invita a tu equipo, asigna roles y controla accesos. Los límites del
+            plan se aplican por <b>memberships activos</b>.
+          </p>
+        </div>
+        <div className="card-compact">
+          <p className="text-sm font-semibold">Nota fiscal</p>
+          <p className="muted text-sm">
+            PREATOR te ayuda a gestionar tu negocio, pero para decisiones
+            fiscales o contables, consulta a tu gestor.
+          </p>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <a href="/alta/cuenta" className="btn btn-accent">
+          Darse de alta
+        </a>
+        <a href="/precios" className="btn btn-ghost">
+          Ver precios
+        </a>
+      </div>
     </div>
   );
 }
