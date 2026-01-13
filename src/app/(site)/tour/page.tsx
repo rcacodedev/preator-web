@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { TourGrid } from "@/components/site/TourGrid";
 
 export const metadata = {
@@ -37,12 +38,12 @@ export default function TourPage() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <a href="/alta/cuenta" className="btn btn-accent">
+        <Link href="/alta/cuenta" className="btn btn-accent">
           Darse de alta
-        </a>
-        <a href="/precios" className="btn btn-ghost">
+        </Link>
+        <Link href="/precios" className="btn btn-ghost">
           Ver precios
-        </a>
+        </Link>
       </div>
     </div>
   );

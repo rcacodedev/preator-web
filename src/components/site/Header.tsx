@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { MobileNav } from "./SiteMobileNav";
@@ -24,16 +24,6 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   const items = useMemo(() => NAV, []);
-
-  // Lock body scroll when open (mobile)
-  useEffect(() => {
-    if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [open]);
 
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--bg)]/85 backdrop-blur">
@@ -59,14 +49,18 @@ export function SiteHeader() {
               <Link
                 key={it.href}
                 href={it.href}
+                aria-current={active ? "page" : undefined}
                 className={cn(
-                  "rounded-full px-3 py-2 text-sm transition",
+                  "relative rounded-full px-3 py-2 text-sm transition",
                   active
                     ? "bg-[var(--card)] text-[var(--fg)]"
                     : "text-[var(--muted)] hover:bg-[var(--card)] hover:text-[var(--fg)]"
                 )}
               >
                 {it.label}
+                {active ? (
+                  <span className="absolute -bottom-0.5 left-3 right-3 h-[2px] rounded bg-[var(--accent)]" />
+                ) : null}
               </Link>
             );
           })}
@@ -89,13 +83,14 @@ export function SiteHeader() {
             <ThemeToggle />
           </div>
 
-          {/* Mobile: only burger */}
+          {/* Mobile: burger */}
           <div className="md:hidden">
             <button
               type="button"
               className="btn btn-ghost"
               aria-label={open ? "Cerrar menú" : "Abrir menú"}
               aria-expanded={open}
+              aria-controls="mobile-drawer"
               onClick={() => setOpen((v) => !v)}
             >
               <span className="sr-only">{open ? "Cerrar" : "Abrir"} menú</span>

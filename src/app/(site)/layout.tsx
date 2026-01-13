@@ -8,10 +8,16 @@ export default function SiteLayout({
 }) {
   return (
     <>
+      <a href="#content" className="skip-link">
+        Saltar al contenido
+      </a>
+
       <SiteHeader />
-      <main className="site-container mx-auto max-w-6xl py-8 md:py-10 lg:py-12">
+
+      <main id="content" className="mx-auto max-w-6xl px-4 py-10">
         {children}
       </main>
+
       <Footer />
     </>
   );

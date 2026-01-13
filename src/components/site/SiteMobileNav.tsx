@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Dispatch, SetStateAction } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 
 type NavItem = { href: string; label: string };
@@ -10,88 +11,167 @@ function cn(...v: Array<string | false | null | undefined>) {
   return v.filter(Boolean).join(" ");
 }
 
+function getFocusable(container: HTMLElement | null) {
+  if (!container) return [];
+  const sel =
+    'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+  return Array.from(container.querySelectorAll<HTMLElement>(sel)).filter(
+    (el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden")
+  );
+}
+
 export function MobileNav({
   open,
   setOpen,
   items,
 }: {
   open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  items: NavItem[];
+  setOpen: (v: boolean | ((prev: boolean) => boolean)) => void;
+  items: readonly NavItem[];
 }) {
+  const pathname = usePathname();
+  const panelRef = useRef<HTMLDivElement | null>(null);
+
+  const activeLabel = useMemo(() => {
+    const it = items.find((x) => x.href === pathname);
+    return it?.label || "";
+  }, [items, pathname]);
+
+  // ESC to close + focus trap
+  useEffect(() => {
+    if (!open) return;
+
+    const panel = panelRef.current;
+    const focusables = getFocusable(panel);
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+
+    // Focus first element inside drawer
+    window.setTimeout(() => first?.focus(), 0);
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+
+      // Trap focus
+      if (!first || !last) return;
+
+      const isShift = e.shiftKey;
+      const active = document.activeElement as HTMLElement | null;
+
+      if (!isShift && active === last) {
+        e.preventDefault();
+        first.focus();
+      } else if (isShift && active === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open, setOpen]);
+
+  // Lock body scroll
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  if (!open) return null;
+
   return (
-    <>
+    <div className="md:hidden">
       {/* Backdrop */}
       <div
-        className={cn(
-          "fixed inset-0 z-40 bg-black/50 transition-opacity md:hidden",
-          open ? "opacity-100" : "pointer-events-none opacity-0"
-        )}
+        className="fixed inset-0 z-40 bg-black/40"
         onClick={() => setOpen(false)}
-        aria-hidden
+        aria-hidden="true"
       />
 
-      {/* Panel */}
+      {/* Drawer */}
       <div
-        className={cn(
-          "fixed right-0 top-14 z-50 h-[calc(100vh-3.5rem)] w-[88%] max-w-sm border-l border-[var(--border)] bg-[var(--bg)] p-4 transition-transform md:hidden",
-          open ? "translate-x-0" : "translate-x-full"
-        )}
+        id="mobile-drawer"
         role="dialog"
         aria-modal="true"
         aria-label="Menú"
+        className="fixed inset-x-0 top-14 z-50"
       >
-        <div className="space-y-3">
-          <div className="card-compact">
-            <p className="text-sm font-semibold">Navegación</p>
-            <p className="text-xs muted">
-              Todo lo esencial, sin ruido. Negro, blanco y una pizca de rojo.
-            </p>
-          </div>
-
-          <div className="grid gap-1">
-            {items.map((it) => (
-              <Link
-                key={it.href}
-                href={it.href}
-                className="rounded-xl px-3 py-3 text-sm text-[var(--fg)] hover:bg-[var(--card)]"
+        <div ref={panelRef} className="mx-auto max-w-6xl px-4">
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg)] shadow-[var(--shadow)]">
+            <div className="flex items-center justify-between gap-3 border-b border-[var(--border)] px-4 py-3">
+              <div className="text-sm">
+                <p className="font-semibold">Menú</p>
+                <p className="text-xs muted">
+                  {activeLabel ? `Estás en: ${activeLabel}` : "Navegación"}
+                </p>
+              </div>
+              <button
+                type="button"
+                className="btn btn-ghost"
                 onClick={() => setOpen(false)}
               >
-                {it.label}
+                Cerrar
+              </button>
+            </div>
+
+            <nav className="grid gap-1 p-2">
+              {items.map((it) => {
+                const active = pathname === it.href;
+                return (
+                  <Link
+                    key={it.href}
+                    href={it.href}
+                    onClick={() => setOpen(false)}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "rounded-xl px-3 py-3 text-sm transition",
+                      active
+                        ? "bg-[var(--card)] text-[var(--fg)]"
+                        : "text-[var(--muted)] hover:bg-[var(--card)] hover:text-[var(--fg)]"
+                    )}
+                  >
+                    {it.label}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <div className="grid gap-2 border-t border-[var(--border)] p-3">
+              <a
+                href="https://app.preator.es"
+                className="btn btn-ghost justify-center"
+                rel="noreferrer"
+              >
+                Acceder
+              </a>
+              <Link
+                href="/alta/cuenta"
+                className="btn btn-accent justify-center"
+                onClick={() => setOpen(false)}
+              >
+                Darse de alta
               </Link>
-            ))}
-          </div>
 
-          <hr className="hr" />
+              <div className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--card)] px-3 py-2">
+                <span className="text-sm muted">Tema</span>
+                <ThemeToggle />
+              </div>
 
-          <div className="grid gap-2">
-            <a
-              href="https://app.preator.es"
-              className="btn btn-ghost w-full justify-center"
-              rel="noreferrer"
-              onClick={() => setOpen(false)}
-            >
-              Acceder
-            </a>
-
-            <Link
-              href="/alta/cuenta"
-              className="btn btn-accent w-full justify-center"
-              onClick={() => setOpen(false)}
-            >
-              Darse de alta
-            </Link>
-
-            <div className="pt-1">
-              <ThemeToggle />
+              <p className="px-1 text-xs muted">
+                Pulsa <b>Esc</b> para cerrar.
+              </p>
             </div>
           </div>
-
-          <p className="muted pt-2 text-[11px]">
-            Para decisiones fiscales, consulta a tu gestor.
-          </p>
         </div>
       </div>
-    </>
+    </div>
   );
 }
