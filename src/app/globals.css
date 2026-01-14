@@ -338,3 +338,14 @@ html,
 body {
   overflow-x: hidden;
 }
+
+.page {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+@media (min-width: 768px) {
+  .page {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
