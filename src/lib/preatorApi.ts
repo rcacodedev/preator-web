@@ -142,3 +142,24 @@ export async function registerAndCheckout(payload: {
     body: JSON.stringify(payload),
   });
 }
+
+export async function checkoutComplete(session_id: string) {
+  const res = await fetch(
+    `${API_BASE}/api/v1/public/checkout-complete/?session_id=${encodeURIComponent(
+      session_id
+    )}`,
+    { method: "GET" }
+  );
+
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data?.detail || "No se pudo sincronizar el pago.");
+  }
+  return res.json() as Promise<{
+    ok: boolean;
+    status: string;
+    plan: string;
+    stripe_customer_id?: string;
+    stripe_subscription_id?: string;
+  }>;
+}
